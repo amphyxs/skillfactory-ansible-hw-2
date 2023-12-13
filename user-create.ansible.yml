@@ -1,0 +1,27 @@
+---
+- name: Create user on server and pass an SSH-key for him
+  hosts: skillfactory-course
+  gather_facts: false
+  tasks:
+    - name: Create user
+      become: true
+      become_user: root
+      ansible.builtin.user:
+        name: user1
+        state: present
+        password: user1
+    - name: Ensure .ssh dir exists
+      become: true
+      become_user: root
+      ansible.builtin.file:
+        mode: '0777'
+        path: /home/user1/.ssh
+        state: directory
+    - name: Copy local SSH-key to server
+      become: true
+      become_user: root
+      ansible.builtin.copy:
+        mode: '0777'
+        src: /home/amphyx/Documents/Projects/skillfactory-devops/6-ansible/task-b6-5-1/id_rsa.pub
+        dest: /home/user1/.ssh/id_rsa.pub
+        remote_src: false
