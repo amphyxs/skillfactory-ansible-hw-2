@@ -1,0 +1,25 @@
+---
+- name: Install or delete Postfix
+  hosts: skillfactory-course
+  tasks:
+    - name: Install Postfix
+      tags: 'init postfix'
+      become_user: root
+      become: true
+      ansible.builtin.apt:
+        name: postfix
+        state: present
+    - name: Launch Postfix
+      tags: 'init postfix'
+      become_user: root
+      become: true
+      changed_when: false
+      ansible.builtin.command:
+        cmd: 'postfix reload'
+    - name: Delete Postfix
+      tags: 'drop postfix'
+      become_user: root
+      become: true
+      ansible.builtin.apt:
+        name: postfix
+        state: absent
